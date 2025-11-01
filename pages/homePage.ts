@@ -1,6 +1,7 @@
 import { Page, Locator, expect } from "@playwright/test";
 import { BasePage } from "./basePage";
 import { SiteConfig } from "../config/environment";
+import { MenuComponent } from "./components/MenuComponents";
 
 export class HomePage extends BasePage {
   private readonly searchInput: Locator;
@@ -8,9 +9,11 @@ export class HomePage extends BasePage {
   private readonly closeAlertButton: Locator;
   private readonly currentLanguage: Locator;
   private readonly currentCountry: Locator;
-
+  readonly menu: MenuComponent;
+  
   constructor(page: Page, siteConfig: SiteConfig) {
     super(page, siteConfig);
+    this.menu = new MenuComponent(page);
     this.searchInput = page.getByPlaceholder("Search");
     this.searchButton = page.getByRole("button", { name: "Search" });
     this.closeAlertButton = page.getByRole('button', { name: 'Close' }).or(page.locator('.close-alert'));

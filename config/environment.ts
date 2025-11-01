@@ -9,14 +9,14 @@ export interface SiteConfig {
 }
 
 export const siteConfigs: { [key: string]: SiteConfig } = {
-  lebanon: {
-    baseUrl: 'https://www.ubuy.com.lb',
+  Lebanon: {
+    baseUrl: "https://www.ubuy.com.lb",
     locale: "en-LB",
     currency: "USD",
     country: "lebanon",
   },
-  japan: {
-    baseUrl: 'https://www.ubuy.co.jp',
+  Japan: {
+    baseUrl: "https://www.ubuy.co.jp",
     locale: "ja-JP",
     currency: "JPY",
     country: "japan",
@@ -24,6 +24,6 @@ export const siteConfigs: { [key: string]: SiteConfig } = {
 };
 
 export const getCurrentSiteConfig = (): SiteConfig => {
-  const region = process.env.TEST_REGION || "lebanon";
+  const region = process.env.TEST_REGION || "Lebanon";
   return siteConfigs[region];
 };
