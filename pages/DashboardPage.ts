@@ -3,24 +3,21 @@ import { BasePage } from "./basePage";
 import { SiteConfig } from "../config/environment";
 import { NavbarComponent } from "./components/NavbarComponent";
 
-export class HomePage extends BasePage {
+export class DashboardPage extends BasePage {
   readonly navbar: NavbarComponent;
+  private readonly loggedInAsText: Locator;
 
   constructor(page: Page, siteConfig: SiteConfig) {
     super(page, siteConfig);
     this.navbar = new NavbarComponent(page);
+    this.loggedInAsText = page.getByText(/Logged in as /);
   }
 
-  async navigateToHome(): Promise<void> {
-    await this.goto();
-    await this.waitForPageLoad();
+  async verifyLoggedInAs(username: string): Promise<void> {
+    await expect(this.loggedInAsText).toContainText(username);
   }
 
-  async verifyTitle(): Promise<void> {
-    await expect(this.page).toHaveTitle("Automation Exercise");
-  }
-
-  async clickSignupLogin(): Promise<void> {
-    await this.navbar.clickSignupLogin();
+  async clickDeleteAccount(): Promise<void> {
+    await this.navbar.clickDeleteAccount();
   }
 }
