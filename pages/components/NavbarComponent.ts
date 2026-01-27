@@ -1,7 +1,13 @@
 import { Page, Locator } from "@playwright/test";
+import { BasePage } from "../basePage";
+import { SiteConfig } from "../../config/environment";
+import { BUTTON_TEXT } from "../../config/constants";
 
-export class NavbarComponent {
-  readonly page: Page;
+/**
+ * NavbarComponent - Reusable navigation bar component
+ * Extends BasePage to use wrapper methods for stable interactions
+ */
+export class NavbarComponent extends BasePage {
   private readonly homeLink: Locator;
   private readonly productsLink: Locator;
   private readonly cartLink: Locator;
@@ -14,18 +20,18 @@ export class NavbarComponent {
   private readonly logoutLink: Locator;
   private readonly loggedInAsText: Locator;
 
-  constructor(page: Page) {
-    this.page = page;
+  constructor(page: Page, siteConfig: SiteConfig) {
+    super(page, siteConfig);
     this.homeLink = page.getByRole("link", { name: " Home" });
     this.productsLink = page.getByRole("link", { name: " Products" });
     this.cartLink = page.getByRole("link", { name: " Cart" });
-    this.signupLoginLink = page.getByRole("link", { name: "Signup / Login" });
+    this.signupLoginLink = page.getByRole("link", { name: BUTTON_TEXT.SIGNUP_LOGIN });
     this.testCasesLink = page.getByRole("link", { name: " Test Cases" });
     this.apiTestingLink = page.getByRole("link", { name: " API Testing" });
     this.videoTutorialsLink = page.getByRole("link", { name: " Video Tutorials" });
     this.contactUsLink = page.getByRole("link", { name: " Contact us" });
-    this.deleteAccountLink = page.getByRole("link", { name: "Delete Account" });
-    this.logoutLink = page.getByRole("link", { name: "Logout" });
+    this.deleteAccountLink = page.getByRole("link", { name: BUTTON_TEXT.DELETE_ACCOUNT });
+    this.logoutLink = page.getByRole("link", { name: BUTTON_TEXT.LOGOUT });
     this.loggedInAsText = page.locator("a:has-text('Logged in as')");
   }
 

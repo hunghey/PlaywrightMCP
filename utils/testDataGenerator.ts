@@ -1,14 +1,18 @@
 import { faker } from "@faker-js/faker";
 
+const firstName = faker.person.firstName();
+const lastName = faker.person.lastName();
+
 export interface GeneratedUserData {
   name: string;
   email: string;
   password: string;
-  firstName: string;
-  lastName: string;
 }
 
 export interface GeneratedDetailsInforData {
+  gender: string;
+  firstName: string;
+  lastName: string;
   address: string;
   country: string;
   state: string;
@@ -23,20 +27,18 @@ export interface GeneratedDetailsInforData {
 }
 
 export function generateUserData(): GeneratedUserData {
-  const firstName = faker.person.firstName();
-  const lastName = faker.person.lastName();
-  
   return {
     name: `${firstName} ${lastName}`,
     email: faker.internet.email(),
     password: faker.internet.password({ length: 12 }),
-    firstName: firstName,
-    lastName: lastName,
   };
 }
 
 export function generateDetailsInforData(): GeneratedDetailsInforData {
   return {
+    gender: faker.person.gender(),
+    firstName: firstName,
+    lastName: lastName,
     address: faker.location.streetAddress(),
     country: "United States",
     state: faker.location.state(),

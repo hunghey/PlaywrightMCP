@@ -32,6 +32,15 @@ export default defineConfig({
 
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
     trace: 'on-first-retry',
+    
+    /* Block ads at browser level */
+    bypassCSP: true,
+  },
+  
+  /* Global setup to block ads */
+  setup: async ({ browser }) => {
+    // This runs once before all tests
+    // Ad blocking is handled at the page level in BasePage
   },
 
   /* Configure projects for major browsers */

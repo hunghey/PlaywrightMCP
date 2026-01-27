@@ -1,11 +1,23 @@
 import { Page, expect, Locator } from "@playwright/test";
 import { BasePage } from "./basePage";
 import { SiteConfig } from "../config/environment";
+import {
+  UI_TEXT,
+  BUTTON_TEXT,
+  GENDER_OPTIONS,
+  FORM_LABELS,
+  DATA_QA_ATTRIBUTES,
+  TEST_DATA,
+} from "../config/constants";
 
-interface UserData {
+/**
+ * UserData interface for account information
+ */
+export interface UserData {
   email: string;
   name: string;
   password: string;
+  gender: string;
   firstName: string;
   lastName: string;
   address: string;
@@ -21,6 +33,10 @@ interface UserData {
   };
 }
 
+/**
+ * AccountInfoPage - Page Object for account information form
+ * Handles filling account details and address information during registration
+ */
 export class AccountInfoPage extends BasePage {
   private readonly enterAccountInfoHeading: Locator;
   private readonly genderMrRadio: Locator;
@@ -45,38 +61,50 @@ export class AccountInfoPage extends BasePage {
 
   constructor(page: Page, siteConfig: SiteConfig) {
     super(page, siteConfig);
-    
+
     // Account Information locators
-    this.enterAccountInfoHeading = page.getByText("Enter Account Information");
-    this.genderMrRadio = page.getByRole("radio", { name: "Mr." });
-    this.genderMrsRadio = page.getByRole("radio", { name: "Mrs." });
-    this.passwordInput = page.locator('input[data-qa="password"]');
-    this.dayOfBirthSelect = page.locator('select[data-qa="days"]');
-    this.monthOfBirthSelect = page.locator('select[data-qa="months"]');
-    this.yearOfBirthSelect = page.locator('select[data-qa="years"]');
-    this.newsletterCheckbox = page.getByRole("checkbox", { name: "Sign up for our newsletter!" });
-    this.specialOffersCheckbox = page.getByRole("checkbox", { name: "Receive special offers from our partners!" });
-    
+    this.enterAccountInfoHeading = page.getByText(UI_TEXT.ENTER_ACCOUNT_INFO);
+    this.genderMrRadio = page.getByRole("radio", { name: GENDER_OPTIONS.MR });
+    this.genderMrsRadio = page.getByRole("radio", { name: GENDER_OPTIONS.MRS });
+    this.passwordInput = page.locator(`input[data-qa="${DATA_QA_ATTRIBUTES.PASSWORD}"]`);
+    this.dayOfBirthSelect = page.locator(`select[data-qa="${DATA_QA_ATTRIBUTES.DAYS}"]`);
+    this.monthOfBirthSelect = page.locator(`select[data-qa="${DATA_QA_ATTRIBUTES.MONTHS}"]`);
+    this.yearOfBirthSelect = page.locator(`select[data-qa="${DATA_QA_ATTRIBUTES.YEARS}"]`);
+    this.newsletterCheckbox = page.getByRole("checkbox", { name: FORM_LABELS.NEWSLETTER });
+    this.specialOffersCheckbox = page.getByRole("checkbox", { name: FORM_LABELS.SPECIAL_OFFERS });
+
     // Address Information locators
-    this.firstNameInput = page.locator('input[data-qa="first_name"]');
-    this.lastNameInput = page.locator('input[data-qa="last_name"]');
-    this.companyInput = page.locator('input[data-qa="company"]');
-    this.addressInput = page.locator('input[data-qa="address"]');
-    this.address2Input = page.locator('input[data-qa="address2"]');
-    this.countrySelect = page.locator('select[data-qa="country"]');
-    this.stateInput = page.locator('input[data-qa="state"]');
-    this.cityInput = page.locator('input[data-qa="city"]');
-    this.zipcodeInput = page.locator('input[data-qa="zipcode"]');
-    this.mobileNumberInput = page.locator('input[data-qa="mobile_number"]');
-    this.createAccountButton = page.getByRole("button", { name: "Create Account" });
+    this.firstNameInput = page.locator(`input[data-qa="${DATA_QA_ATTRIBUTES.FIRST_NAME}"]`);
+    this.lastNameInput = page.locator(`input[data-qa="${DATA_QA_ATTRIBUTES.LAST_NAME}"]`);
+    this.companyInput = page.locator(`input[data-qa="${DATA_QA_ATTRIBUTES.COMPANY}"]`);
+    this.addressInput = page.locator(`input[data-qa="${DATA_QA_ATTRIBUTES.ADDRESS}"]`);
+    this.address2Input = page.locator(`input[data-qa="${DATA_QA_ATTRIBUTES.ADDRESS_2}"]`);
+    this.countrySelect = page.locator(`select[data-qa="${DATA_QA_ATTRIBUTES.COUNTRY}"]`);
+    this.stateInput = page.locator(`input[data-qa="${DATA_QA_ATTRIBUTES.STATE}"]`);
+    this.cityInput = page.locator(`input[data-qa="${DATA_QA_ATTRIBUTES.CITY}"]`);
+    this.zipcodeInput = page.locator(`input[data-qa="${DATA_QA_ATTRIBUTES.ZIPCODE}"]`);
+    this.mobileNumberInput = page.locator(`input[data-qa="${DATA_QA_ATTRIBUTES.MOBILE_NUMBER}"]`);
+    this.createAccountButton = page.getByRole("button", { name: BUTTON_TEXT.CREATE_ACCOUNT });
   }
 
+  /**
+   * Verify the "Enter Account Information" heading is visible
+   */
   async verifyEnterAccountInfoVisible(): Promise<void> {
     await expect(this.enterAccountInfoHeading).toBeVisible();
   }
 
+  /**
+   * Fill account information form (gender, password, date of birth, checkboxes)
+   * @param userData - User data object containing account information
+   */
   async fillAccountInformation(userData: UserData): Promise<void> {
-    await this.genderMrRadio.check();
+    if(userData.gender === GENDER_OPTIONS.MR){
+      await this.genderMrRadio.check();
+    }
+    else{
+      await this.genderMrsRadio.check();
+    }
     await this.passwordInput.fill(userData.password);
     await this.dayOfBirthSelect.selectOption(userData.dateOfBirth.day);
     await this.monthOfBirthSelect.selectOption(userData.dateOfBirth.month);
@@ -85,6 +113,10 @@ export class AccountInfoPage extends BasePage {
     await this.specialOffersCheckbox.check();
   }
 
+  /**
+   * Fill address information form
+   * @param userData - User data object containing address information
+   */
   async fillAddressInformation(userData: UserData): Promise<void> {
     await this.firstNameInput.fill(userData.firstName);
     await this.lastNameInput.fill(userData.lastName);
@@ -98,6 +130,9 @@ export class AccountInfoPage extends BasePage {
     await this.mobileNumberInput.fill(userData.mobileNumber);
   }
 
+  /**
+   * Click the Create Account button
+   */
   async clickCreateAccount(): Promise<void> {
     await this.createAccountButton.click();
   }
