@@ -20,4 +20,8 @@ export class DashboardPage extends BasePage {
   async clickDeleteAccount(): Promise<void> {
     await this.navbar.clickDeleteAccount();
   }
+
+  async logout(): Promise<void> {
+    await this.navbar.clickLogout();
+  }
 }

@@ -6,6 +6,9 @@ export interface GeneratedUserData {
   password: string;
   firstName: string;
   lastName: string;
+}
+
+export interface GeneratedDetailsInforData {
   address: string;
   country: string;
   state: string;
@@ -29,6 +32,11 @@ export function generateUserData(): GeneratedUserData {
     password: faker.internet.password({ length: 12 }),
     firstName: firstName,
     lastName: lastName,
+  };
+}
+
+export function generateDetailsInforData(): GeneratedDetailsInforData {
+  return {
     address: faker.location.streetAddress(),
     country: "United States",
     state: faker.location.state(),

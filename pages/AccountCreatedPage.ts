@@ -1,15 +1,19 @@
-import { Page, expect, Locator } from "@playwright/test";
+import { Page, expect, Locator, FrameLocator } from "@playwright/test";
 import { BasePage } from "./basePage";
 import { SiteConfig } from "../config/environment";
 
 export class AccountCreatedPage extends BasePage {
   private readonly accountCreatedHeading: Locator;
   private readonly continueButton: Locator;
+  private readonly adFrame: FrameLocator;
+  private readonly closeAdButton:Locator;
 
   constructor(page: Page, siteConfig: SiteConfig) {
     super(page, siteConfig);
     this.accountCreatedHeading = page.getByText("Account Created!");
     this.continueButton = page.getByRole("link", { name: "Continue" });
+    this.adFrame = page.frameLocator('iframe[id*="aswift"]').first();
+    this.closeAdButton = this.adFrame.locator('div[aria-label="Close ad"]').first();
   }
 
   async verifyAccountCreated(): Promise<void> {
@@ -23,10 +27,8 @@ export class AccountCreatedPage extends BasePage {
       await this.page.waitForTimeout(2000);
       
       // Try to close any ad iframe if it exists
-      const adFrame = this.page.frameLocator('iframe[id*="aswift"]').first();
-      const closeButton = adFrame.locator('div[aria-label="Close ad"]').first();
-      if (await closeButton.isVisible({ timeout: 2000 }).catch(() => false)) {
-        await closeButton.click();
+      if (await this.closeAdButton.isVisible({ timeout: 2000 }).catch(() => false)) {
+        await this.closeAdButton.click();
       }
     } catch (error) {
       // If no ad appears or error occurs, continue normally

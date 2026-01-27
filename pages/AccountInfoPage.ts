@@ -3,6 +3,8 @@ import { BasePage } from "./basePage";
 import { SiteConfig } from "../config/environment";
 
 interface UserData {
+  email: string;
+  name: string;
   password: string;
   firstName: string;
   lastName: string;
