@@ -32,17 +32,12 @@ export class AccountCreatedPage extends BasePage {
    * Click the Continue button, handling potential ad popups
    */
   async clickContinue(): Promise<void> {
-    try {
-      // Wait a bit for any popups to appear
-      await this.page.waitForTimeout(2000);
-      
-      // Try to close any ad iframe if it exists
-      if (await this.closeAdButton.isVisible({ timeout: 2000 }).catch(() => false)) {
-        await this.closeAdButton.click();
-      }
-    } catch (error) {
-      // If no ad appears or error occurs, continue normally
-      console.log("No ad iframe detected or already closed");
+    const isAdVisible = await this.closeAdButton
+      .isVisible({ timeout: TIMEOUTS.AD_POPUP })
+      .catch(() => false);
+
+    if (isAdVisible) {
+      await this.closeAdButton.click();
     }
 
     await this.continueButton.click();
