@@ -12,11 +12,13 @@ The framework implements industry best practices including the **Page Object Mod
 
 ## Key Features
 
-- **Page Object Model (POM)**+
+- **Page Object Model (POM) with Playwright fixtures**
 
 - **CSV Data Provider**
 
 - **Environment Configuration**
+
+- **CI-ready Playwright configuration (retries, junit/html reporters, traces/videos on failure)**
 
 - **Test Data Generation**
 
