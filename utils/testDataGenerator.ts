@@ -23,15 +23,14 @@ export interface GeneratedDetailsInforData {
   };
 }
 
-function buildIdentity() {
-  const firstName = faker.person.firstName();
-  const lastName = faker.person.lastName();
-
-  return { firstName, lastName };
+export function generateIdentity() {
+  return {
+    firstName: faker.person.firstName(),
+    lastName: faker.person.lastName(),
+  };
 }
 
-export function generateUserData(): GeneratedUserData {
-  const identity = buildIdentity();
+export function generateUserData(identity = generateIdentity()): GeneratedUserData {
 
   return {
     name: `${identity.firstName} ${identity.lastName}`,
@@ -44,8 +43,7 @@ export function generateUserData(): GeneratedUserData {
   };
 }
 
-export function generateDetailsInforData(): GeneratedDetailsInforData {
-  const identity = buildIdentity();
+export function generateDetailsInforData(identity = generateIdentity()): GeneratedDetailsInforData {
 
   return {
     gender: faker.helpers.arrayElement(["Mr.", "Mrs."]),

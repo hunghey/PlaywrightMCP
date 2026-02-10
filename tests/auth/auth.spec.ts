@@ -35,6 +35,7 @@ test.describe("User Authentication & Management Tests", () => {
     accountInfoPage,
     accountCreatedPage,
     dashboardPage,
+    deleteAccountPage,
   }) => {
     const user = buildUserData();
 
@@ -52,6 +53,16 @@ test.describe("User Authentication & Management Tests", () => {
       await saveUserToCSV(user.name, user.email, user.password);
       await dashboardPage.logout();
       await signupPage.verifyNewUserSignupVisible();
+    });
+
+    await test.step("Re-login and delete account", async () => {
+    await signupPage.fillLoginForm(user.email, user.password);
+    await signupPage.clickLogin();
+    await dashboardPage.verifyLoggedInAs(user.name);
+    await dashboardPage.clickDeleteAccount();
+    await deleteAccountPage.verifyAccountDeleted();
+    await deleteAccountPage.clickContinue();
+    await homePage.verifyTitle();
     });
   });
 
@@ -123,38 +134,6 @@ test.describe("User Authentication & Management Tests", () => {
     });
 
     await test.step("Cleanup account", async () => {
-      await signupPage.fillLoginForm(user.email, user.password);
-      await signupPage.clickLogin();
-      await dashboardPage.verifyLoggedInAs(user.name);
-      await dashboardPage.clickDeleteAccount();
-      await deleteAccountPage.verifyAccountDeleted();
-      await deleteAccountPage.clickContinue();
-      await homePage.verifyTitle();
-    });
-  });
-
-  test("TC4: Should successfully login and delete account", async ({
-    homePage,
-    signupPage,
-    accountInfoPage,
-    accountCreatedPage,
-    dashboardPage,
-    deleteAccountPage,
-  }) => {
-    const user = buildUserData();
-
-    await test.step("Prepare account by registering user", async () => {
-      await registerUser(user, {
-        homePage,
-        signupPage,
-        accountInfoPage,
-        accountCreatedPage,
-      });
-    });
-
-    await test.step("Re-login and delete account", async () => {
-      await dashboardPage.logout();
-      await signupPage.verifyNewUserSignupVisible();
       await signupPage.fillLoginForm(user.email, user.password);
       await signupPage.clickLogin();
       await dashboardPage.verifyLoggedInAs(user.name);
