@@ -1,7 +1,7 @@
 import { ERROR_MESSAGES, TEST_DATA } from "../../config/constants";
 import { saveUserToCSV } from "../../utils/csvUtils";
 import { test } from "../fixtures/pomFixtures";
-import { buildUserData, FullUserData } from "../helpers/userFactory";
+import { buildUserData, FullUserData } from "../../utils/testDataGenerator";
 
 test.describe("User Authentication & Management Tests", () => {
   async function registerUser(

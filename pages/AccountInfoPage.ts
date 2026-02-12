@@ -9,29 +9,7 @@ import {
   DATA_QA_ATTRIBUTES,
   TEST_DATA,
 } from "../config/constants";
-
-/**
- * UserData interface for account information
- */
-export interface UserData {
-  email: string;
-  name: string;
-  password: string;
-  gender: string;
-  firstName: string;
-  lastName: string;
-  address: string;
-  country: string;
-  state: string;
-  city: string;
-  zipcode: string;
-  mobileNumber: string;
-  dateOfBirth: {
-    day: string;
-    month: string;
-    year: string;
-  };
-}
+import { CreateAccountRequest } from "../utils/apiTypes";
 
 /**
  * AccountInfoPage - Page Object for account information form
@@ -98,7 +76,7 @@ export class AccountInfoPage extends BasePage {
    * Fill account information form (gender, password, date of birth, checkboxes)
    * @param userData - User data object containing account information
    */
-  async fillAccountInformation(userData: UserData): Promise<void> {
+  async fillAccountInformation(userData: CreateAccountRequest): Promise<void> {
     if(userData.gender === GENDER_OPTIONS.MR){
       await this.genderMrRadio.check();
     }
@@ -117,17 +95,17 @@ export class AccountInfoPage extends BasePage {
    * Fill address information form
    * @param userData - User data object containing address information
    */
-  async fillAddressInformation(userData: UserData): Promise<void> {
-    await this.firstNameInput.fill(userData.firstName);
-    await this.lastNameInput.fill(userData.lastName);
+  async fillAddressInformation(userData: CreateAccountRequest): Promise<void> {
+    await this.firstNameInput.fill(userData.firstname);
+    await this.lastNameInput.fill(userData.lastname);
     await this.companyInput.fill("Test Company");
-    await this.addressInput.fill(userData.address);
-    await this.address2Input.fill("Apt 123");
+    await this.addressInput.fill(userData.address1);
+    await this.address2Input.fill(userData.address2);
     await this.countrySelect.selectOption(userData.country);
     await this.stateInput.fill(userData.state);
     await this.cityInput.fill(userData.city);
     await this.zipcodeInput.fill(userData.zipcode);
-    await this.mobileNumberInput.fill(userData.mobileNumber);
+    await this.mobileNumberInput.fill(userData.mobile_number);
   }
 
   /**
