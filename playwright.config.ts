@@ -18,7 +18,7 @@ export default defineConfig({
       ]
     : [['list'], ['html', { open: 'never' }]],
   use: {
-    headless: true,
+    headless: false,
     screenshot: 'only-on-failure',
     trace: 'on-first-retry',
     video: 'retain-on-failure',

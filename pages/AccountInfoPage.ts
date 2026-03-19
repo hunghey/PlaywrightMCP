@@ -9,7 +9,7 @@ import {
   DATA_QA_ATTRIBUTES,
   TEST_DATA,
 } from "../config/constants";
-import { CreateAccountRequest } from "../utils/apiTypes";
+import { CreateAccountRequest } from "../utils/testDataGenerator";
 
 /**
  * AccountInfoPage - Page Object for account information form
