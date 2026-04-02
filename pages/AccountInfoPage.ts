@@ -9,7 +9,7 @@ import {
   DATA_QA_ATTRIBUTES,
   TEST_DATA,
 } from "../config/constants";
-import { CreateAccountRequest } from "../utils/testDataGenerator";
+import { UIUserData } from "../utils/uiTypes";
 
 /**
  * AccountInfoPage - Page Object for account information form
@@ -76,7 +76,7 @@ export class AccountInfoPage extends BasePage {
    * Fill account information form (gender, password, date of birth, checkboxes)
    * @param userData - User data object containing account information
    */
-  async fillAccountInformation(userData: CreateAccountRequest): Promise<void> {
+  async fillAccountInformation(userData: UIUserData): Promise<void> {
     if(userData.gender === GENDER_OPTIONS.MR){
       await this.genderMrRadio.check();
     }
@@ -95,10 +95,10 @@ export class AccountInfoPage extends BasePage {
    * Fill address information form
    * @param userData - User data object containing address information
    */
-  async fillAddressInformation(userData: CreateAccountRequest): Promise<void> {
+  async fillAddressInformation(userData: UIUserData): Promise<void> {
     await this.firstNameInput.fill(userData.firstname);
     await this.lastNameInput.fill(userData.lastname);
-    await this.companyInput.fill("Test Company");
+    await this.companyInput.fill(userData.company);
     await this.addressInput.fill(userData.address1);
     await this.address2Input.fill(userData.address2);
     await this.countrySelect.selectOption(userData.country);

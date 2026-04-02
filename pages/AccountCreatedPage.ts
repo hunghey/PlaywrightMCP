@@ -2,7 +2,6 @@ import { Page, expect, Locator, FrameLocator } from "@playwright/test";
 import { BasePage } from "./basePage";
 import { SiteConfig } from "../config/environment";
 import { UI_TEXT, BUTTON_TEXT, TIMEOUTS } from "../config/constants";
-
 /**
  * AccountCreatedPage - Page Object for account creation confirmation page
  * Handles verification of account creation and ad popup management

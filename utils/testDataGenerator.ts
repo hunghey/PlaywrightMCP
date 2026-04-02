@@ -1,35 +1,14 @@
 import { faker } from "@faker-js/faker";
 import { generatePassword } from "../fixtures/testData";
-
+import { UIUserData } from "./uiTypes";
   // =============================================================================
 // User Account Types
 // =============================================================================
 
-export interface CreateAccountRequest {
-firstname: string;
-lastname: string;
-name: string;
-email: string;
-password: string;
-gender: string;
-dateOfBirth: {
-  day: string;
-  month: string;
-  year: string;
-};
-company: string;
-address1: string;
-address2: string;
-country: string;
-zipcode: string;
-state: string;
-city: string;
-mobile_number: string;
-}
 
 export function generateUserAccountData(
-  overrides?: Partial<CreateAccountRequest>
-): CreateAccountRequest {
+  overrides?: Partial<UIUserData>
+): UIUserData {
   const firstName = faker.person.firstName();
   const lastName = faker.person.lastName();
   
@@ -59,9 +38,7 @@ export function generateUserAccountData(
   };
 }
 
-export type FullUserData = CreateAccountRequest;
-
-export function buildUserData(): FullUserData {
+export function buildUserData(): UIUserData {
   const credentials = generateUserAccountData();
   return credentials;
 }

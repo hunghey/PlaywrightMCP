@@ -1,11 +1,12 @@
 import { ERROR_MESSAGES, TEST_DATA } from "../../config/constants";
 import { saveUserToCSV } from "../../utils/csvUtils";
 import { test } from "../fixtures/pomFixtures";
-import { buildUserData, FullUserData } from "../../utils/testDataGenerator";
+import { buildUserData } from "../../utils/testDataGenerator";
+import { UIUserData } from "../../utils/uiTypes";
 
 test.describe("User Authentication & Management Tests", () => {
   async function registerUser(
-    user: FullUserData,
+    user: UIUserData,
     pages: {
       homePage: import("../../pages/HomePage").HomePage;
       signupPage: import("../../pages/SignupPage").SignupPage;
