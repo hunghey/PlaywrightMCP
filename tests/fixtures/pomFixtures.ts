@@ -6,6 +6,7 @@ import { AccountInfoPage } from "../../pages/AccountInfoPage";
 import { AccountCreatedPage } from "../../pages/AccountCreatedPage";
 import { DashboardPage } from "../../pages/DashboardPage";
 import { DeleteAccountPage } from "../../pages/DeleteAccountPage";
+import { ContactUsPage } from "../../pages/ContactUsPage";
 
 type PomFixtures = {
   homePage: HomePage;
@@ -14,6 +15,7 @@ type PomFixtures = {
   accountCreatedPage: AccountCreatedPage;
   dashboardPage: DashboardPage;
   deleteAccountPage: DeleteAccountPage;
+  contactUsPage: ContactUsPage;
 };
 
 export const test = base.extend<PomFixtures>({
@@ -51,6 +53,9 @@ export const test = base.extend<PomFixtures>({
   },
   deleteAccountPage: async ({ page }, use) => {
     await use(new DeleteAccountPage(page, automationExerciseConfig));
+  },
+  contactUsPage: async ({ page }, use) => {
+    await use(new ContactUsPage(page, automationExerciseConfig));
   },
 });
 
