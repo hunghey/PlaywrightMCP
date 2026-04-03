@@ -5,6 +5,9 @@ import { buildUserData } from "../../utils/testDataGenerator";
 import { UIUserData } from "../../utils/uiTypes";
 
 test.describe("User Authentication & Management Tests", () => {
+  /**
+   * Helper: Register a new user through the complete signup flow
+   */
   async function registerUser(
     user: UIUserData,
     pages: {
@@ -28,6 +31,29 @@ test.describe("User Authentication & Management Tests", () => {
     await accountInfoPage.clickCreateAccount();
     await accountCreatedPage.verifyAccountCreated();
     await accountCreatedPage.clickContinue();
+  }
+
+  /**
+   * Helper:  Cleaup user account
+   */
+  async function cleanupUser(
+    user: UIUserData,
+    pages: {
+      signupPage: import("../../pages/SignupPage").SignupPage;
+      dashboardPage: import("../../pages/DashboardPage").DashboardPage;
+      deleteAccountPage: import("../../pages/DeleteAccountPage").DeleteAccountPage;
+      homePage: import("../../pages/HomePage").HomePage;
+    }
+  ): Promise<void> {
+    const { signupPage, dashboardPage, deleteAccountPage, homePage } = pages;
+
+    await signupPage.fillLoginForm(user.email, user.password);
+    await signupPage.clickLogin();
+    await dashboardPage.verifyLoggedInAs(user.name);
+    await dashboardPage.clickDeleteAccount();
+    await deleteAccountPage.verifyAccountDeleted();
+    await deleteAccountPage.clickContinue();
+    await homePage.verifyTitle();
   }
 
   test("TC1: Should successfully register a new user, verify account, and logout", async ({
@@ -57,13 +83,12 @@ test.describe("User Authentication & Management Tests", () => {
     });
 
     await test.step("Re-login and delete account", async () => {
-    await signupPage.fillLoginForm(user.email, user.password);
-    await signupPage.clickLogin();
-    await dashboardPage.verifyLoggedInAs(user.name);
-    await dashboardPage.clickDeleteAccount();
-    await deleteAccountPage.verifyAccountDeleted();
-    await deleteAccountPage.clickContinue();
-    await homePage.verifyTitle();
+      await cleanupUser(user, {
+        signupPage,
+        dashboardPage,
+        deleteAccountPage,
+        homePage
+      });
     });
   });
 
@@ -95,14 +120,13 @@ test.describe("User Authentication & Management Tests", () => {
       await signupPage.verifySignupError(ERROR_MESSAGES.SIGNUP_EMAIL_EXISTS);
     });
 
-    await test.step("Cleanup account", async () => {
-      await signupPage.fillLoginForm(user.email, user.password);
-      await signupPage.clickLogin();
-      await dashboardPage.verifyLoggedInAs(user.name);
-      await dashboardPage.clickDeleteAccount();
-      await deleteAccountPage.verifyAccountDeleted();
-      await deleteAccountPage.clickContinue();
-      await homePage.verifyTitle();
+    await test.step("Re-login and delete account", async () => {
+      await cleanupUser(user, {
+        signupPage,
+        dashboardPage,
+        deleteAccountPage,
+        homePage
+      });
     });
   });
 
@@ -134,14 +158,13 @@ test.describe("User Authentication & Management Tests", () => {
       await signupPage.verifyLoginError(ERROR_MESSAGES.LOGIN_INVALID_CREDENTIALS);
     });
 
-    await test.step("Cleanup account", async () => {
-      await signupPage.fillLoginForm(user.email, user.password);
-      await signupPage.clickLogin();
-      await dashboardPage.verifyLoggedInAs(user.name);
-      await dashboardPage.clickDeleteAccount();
-      await deleteAccountPage.verifyAccountDeleted();
-      await deleteAccountPage.clickContinue();
-      await homePage.verifyTitle();
+    await test.step("Re-login and delete account", async () => {
+      await cleanupUser(user, {
+        signupPage,
+        dashboardPage,
+        deleteAccountPage,
+        homePage
+      });
     });
   });
 });
