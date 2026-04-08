@@ -9,7 +9,7 @@
 import { test, expect } from '@playwright/test';
 import { ApiClient } from '../../utils/apiClient';
 import { BrandsResponse, ResponseCode } from '../../utils/apiTypes';
-import { expectedResponseCodes, expectedResponseMessages } from '../../fixtures/testData';
+import { HTTP_STATUS, API_MESSAGES } from '../../test-data/shared/contants';
 
 test.describe('Brand API Tests', () => {
   let apiClient: ApiClient;
@@ -29,7 +29,7 @@ test.describe('Brand API Tests', () => {
     const response = await apiClient.get('/brandsList');
 
     // Validate HTTP status code is 200 OK
-    await apiClient.validateStatusCode(response, expectedResponseCodes.OK);
+    await apiClient.validateStatusCode(response, HTTP_STATUS.OK);
 
     // Parse response body as JSON
     const responseBody: BrandsResponse = await apiClient.parseJsonResponse(response);
@@ -124,7 +124,7 @@ test.describe('Brand API Tests', () => {
     // Validate error message
     apiClient.validateResponseMessage(
       responseBody,
-      expectedResponseMessages.METHOD_NOT_SUPPORTED
+      API_MESSAGES.METHOD_NOT_SUPPORTED
     );
   });
 
@@ -146,7 +146,7 @@ test.describe('Brand API Tests', () => {
 
     apiClient.validateResponseMessage(
       responseBody,
-      expectedResponseMessages.METHOD_NOT_SUPPORTED
+      API_MESSAGES.METHOD_NOT_SUPPORTED
     );
   });
 
@@ -167,6 +167,6 @@ test.describe('Brand API Tests', () => {
     console.log(`Response time: ${responseTime}ms`);
 
     // Ensure request was still successful
-    await apiClient.validateStatusCode(response, expectedResponseCodes.OK);
+    await apiClient.validateStatusCode(response, HTTP_STATUS.OK);
   });
 });

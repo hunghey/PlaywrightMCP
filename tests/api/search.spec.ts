@@ -9,12 +9,11 @@
 import { test, expect } from '@playwright/test';
 import { ApiClient } from '../../utils/apiClient';
 import { SearchProductResponse, ResponseCode } from '../../utils/apiTypes';
+import { HTTP_STATUS, API_MESSAGES } from '../../test-data/shared/contants';
 import { 
-  expectedResponseCodes, 
-  expectedResponseMessages,
   searchTerms,
   generateSearchProductData 
-} from '../../fixtures/testData';
+} from '../../test-data/api/products.data';
 
 test.describe('Search API Tests', () => {
   let apiClient: ApiClient;
@@ -37,7 +36,7 @@ test.describe('Search API Tests', () => {
     const response = await apiClient.post('/searchProduct', searchData);
 
     // Validate HTTP status code is 200 OK
-    await apiClient.validateStatusCode(response, expectedResponseCodes.OK);
+    await apiClient.validateStatusCode(response, HTTP_STATUS.OK);
 
     // Parse response body
     const responseBody: SearchProductResponse = await apiClient.parseJsonResponse(response);
@@ -78,7 +77,7 @@ test.describe('Search API Tests', () => {
       const response = await apiClient.post('/searchProduct', searchData);
 
       // Validate status code
-      await apiClient.validateStatusCode(response, expectedResponseCodes.OK);
+      await apiClient.validateStatusCode(response, HTTP_STATUS.OK);
 
       // Parse response
       const responseBody: SearchProductResponse = await apiClient.parseJsonResponse(response);
@@ -171,7 +170,7 @@ test.describe('Search API Tests', () => {
     // Validate error message
     apiClient.validateResponseMessage(
       responseBody,
-      expectedResponseMessages.BAD_REQUEST_SEARCH
+      API_MESSAGES.BAD_REQUEST_SEARCH
     );
   });
 
@@ -212,6 +211,6 @@ test.describe('Search API Tests', () => {
     console.log(`Search response time: ${responseTime}ms`);
 
     // Ensure request was successful
-    await apiClient.validateStatusCode(response, expectedResponseCodes.OK);
+    await apiClient.validateStatusCode(response, HTTP_STATUS.OK);
   });
 });

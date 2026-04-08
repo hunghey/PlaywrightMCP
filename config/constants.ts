@@ -21,6 +21,10 @@ export const UI_TEXT = {
   ACCOUNT_CREATED: "Account Created!",
   ACCOUNT_DELETED: "Account Deleted!",
   LOGGED_IN_AS: "Logged in as",
+  GET_IN_TOUCH: "Get In Touch",
+  CONTACT_US_SUCCESS: "Success! Your details have been submitted successfully.",
+  ORDER_PLACED: "Order Placed!",
+  ORDER_CONFIRM: "Congratulations! Your order has been confirmed!",
 } as const;
 
 // Button/Link Text

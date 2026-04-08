@@ -77,12 +77,27 @@ export class ContactUsPage extends BasePage {
 
   /**
    * Verify success message after form submission
+   * Use specific selector to avoid conflict with newsletter success message
+   * Wait for the element to not have 'hidden' style
    */
   async verifySuccessMessage(): Promise<void> {
-    await expect(this.successMessage).toBeVisible();
-    await expect(this.successMessage).toContainText(
+    const successLocator = this.page.locator(
+      "#contact-page .status.alert.alert-success",
+    );
+
+    // Wait for element to exist
+    await successLocator.waitFor({ state: "attached", timeout: 10000 });
+
+    // Wait for it to become visible (remove hidden class/style)
+    await expect(successLocator).not.toHaveCSS("display", "none", {
+      timeout: 10000,
+    });
+
+    // Finally verify it contains the expected text
+    await expect(successLocator).toContainText(
       "Success! Your details have been submitted successfully.",
     );
+
     console.log("✓ Success message is displayed");
   }
 
@@ -118,12 +133,12 @@ export class ContactUsPage extends BasePage {
   }
 
   /**
-   * Click Submit button and auto-accept the browser confirmation dialog
-   * The site shows a JS confirm() popup: "Press OK to proceed"
+   * Click Submit button and auto-accept the browser confirmation dialog (if appears)
+   * Note: Dialog may not appear when uploading files in some browsers
    */
   async clickSubmitAndAcceptDialog(): Promise<void> {
-    // Register dialog handler that will auto-accept
-    this.page.on("dialog", async (dialog) => {
+    // Setup dialog handler - will auto-accept if dialog appears
+    this.page.once("dialog", async (dialog) => {
       console.log(`Dialog detected: ${dialog.message()}`);
       await dialog.accept();
       console.log("✓ Accepted browser confirmation dialog");
@@ -132,8 +147,15 @@ export class ContactUsPage extends BasePage {
     // Click submit button
     await this.submitButton.click();
 
-    // Give some time for form submission to process
-    await this.page.waitForLoadState("networkidle");
+    // Wait a bit for potential page navigation or AJAX
+    await this.page.waitForTimeout(1000);
+
+    // Try to wait for load state, but don't fail if it times out
+    await this.page
+      .waitForLoadState("domcontentloaded", { timeout: 5000 })
+      .catch(() => {
+        console.log("⚠ Page did not trigger full reload");
+      });
   }
 
   /**

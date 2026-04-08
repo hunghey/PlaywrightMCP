@@ -17,13 +17,12 @@ import {
   ResponseCode,
   CreateAccountRequest 
 } from '../../utils/apiTypes';
+import { HTTP_STATUS, API_MESSAGES } from '../../test-data/shared/contants';
 import { 
-  expectedResponseCodes, 
-  expectedResponseMessages,
   generateUserAccountData,
   generateMultipleUserAccounts,
   generateUniqueEmail 
-} from '../../fixtures/testData';
+} from '../../test-data/api/users.generator';
 
 test.describe('User Management API Tests', () => {
   let apiClient: ApiClient;
@@ -56,7 +55,7 @@ test.describe('User Management API Tests', () => {
     // Validate success message
     apiClient.validateResponseMessage(
       responseBody,
-      expectedResponseMessages.USER_CREATED
+      API_MESSAGES.USER_CREATED
     );
 
     console.log('User created successfully:', userData.email);
@@ -82,8 +81,8 @@ test.describe('User Management API Tests', () => {
       const responseBody: AccountResponse = await apiClient.parseJsonResponse(response);
 
       // Use soft assertions to test all titles
-      expect.soft(responseBody.responseCode, `Should create ${title} account`).toBe(expectedResponseCodes.CREATED);
-      expect.soft(responseBody.message).toBe(expectedResponseMessages.USER_CREATED);
+      expect.soft(responseBody.responseCode, `Should create ${title} account`).toBe(HTTP_STATUS.CREATED);
+      expect.soft(responseBody.message).toBe(API_MESSAGES.USER_CREATED);
 
       console.log(`Created ${title} account:`, userData.email);
 
@@ -105,7 +104,7 @@ test.describe('User Management API Tests', () => {
     // Create account first time
     const firstResponse = await apiClient.post('/createAccount', userData);
     const firstResponseBody: AccountResponse = await apiClient.parseJsonResponse(firstResponse);
-    expect(firstResponseBody.responseCode).toBe(expectedResponseCodes.CREATED);
+    expect(firstResponseBody.responseCode).toBe(HTTP_STATUS.CREATED);
 
     // Attempt to create account with same email
     const secondResponse = await apiClient.post('/createAccount', userData);
@@ -116,7 +115,7 @@ test.describe('User Management API Tests', () => {
     console.log('Duplicate email attempt returned status:', statusCode);
     
     // Soft assertion - API might return 400 or custom error
-    expect.soft(statusCode).not.toBe(expectedResponseCodes.CREATED);
+    expect.soft(statusCode).not.toBe(HTTP_STATUS.CREATED);
 
     // Cleanup
     await apiClient.delete('/deleteAccount', {
@@ -144,7 +143,7 @@ test.describe('User Management API Tests', () => {
     });
 
     // Validate HTTP status code is 200 OK
-    await apiClient.validateStatusCode(response, expectedResponseCodes.OK);
+    await apiClient.validateStatusCode(response, HTTP_STATUS.OK);
 
     // Parse response body
     const responseBody: AccountResponse = await apiClient.parseJsonResponse(response);
@@ -155,7 +154,7 @@ test.describe('User Management API Tests', () => {
     // Validate success message
     apiClient.validateResponseMessage(
       responseBody,
-      expectedResponseMessages.ACCOUNT_DELETED
+      API_MESSAGES.ACCOUNT_DELETED
     );
 
     console.log('User deleted successfully');
@@ -178,7 +177,7 @@ test.describe('User Management API Tests', () => {
 
     // API might return 404 or custom error
     // Using soft assertion to not block test suite
-    expect.soft(responseBody.responseCode).not.toBe(expectedResponseCodes.OK);
+    expect.soft(responseBody.responseCode).not.toBe(HTTP_STATUS.OK);
   });
 
   /**
@@ -206,7 +205,7 @@ test.describe('User Management API Tests', () => {
     const response = await apiClient.put('/updateAccount', updatedData);
 
     // Validate HTTP status code is 200 OK
-    await apiClient.validateStatusCode(response, expectedResponseCodes.OK);
+    await apiClient.validateStatusCode(response, HTTP_STATUS.OK);
 
     // Parse response body
     const responseBody: AccountResponse = await apiClient.parseJsonResponse(response);
@@ -217,7 +216,7 @@ test.describe('User Management API Tests', () => {
     // Validate success message
     apiClient.validateResponseMessage(
       responseBody,
-      expectedResponseMessages.USER_UPDATED
+      API_MESSAGES.USER_UPDATED
     );
 
     console.log('User updated successfully');
@@ -247,7 +246,7 @@ test.describe('User Management API Tests', () => {
     });
 
     // Validate HTTP status code is 200 OK
-    await apiClient.validateStatusCode(response, expectedResponseCodes.OK);
+    await apiClient.validateStatusCode(response, HTTP_STATUS.OK);
 
     // Parse response body
     const responseBody: UserDetailResponse = await apiClient.parseJsonResponse(response);
@@ -319,8 +318,8 @@ test.describe('User Management API Tests', () => {
     const createResponse = await apiClient.post('/createAccount', userData);
     const createBody: AccountResponse = await apiClient.parseJsonResponse(createResponse);
     
-    expect(createBody.responseCode).toBe(expectedResponseCodes.CREATED);
-    expect(createBody.message).toBe(expectedResponseMessages.USER_CREATED);
+    expect(createBody.responseCode).toBe(HTTP_STATUS.CREATED);
+    expect(createBody.message).toBe(API_MESSAGES.USER_CREATED);
     console.log('✓ User created:', userData.email);
 
     // 2. Get user details (verify creation)
@@ -331,7 +330,7 @@ test.describe('User Management API Tests', () => {
     });
     const getBody1: UserDetailResponse = await apiClient.parseJsonResponse(getResponse1);
     
-    expect(getResponse1.status()).toBe(expectedResponseCodes.OK);
+    expect(getResponse1.status()).toBe(HTTP_STATUS.OK);
     expect(getBody1.user.email).toBe(userData.email);
     expect(getBody1.user.first_name).toBe(userData.firstname);
     console.log('✓ User details retrieved:', getBody1.user.first_name, getBody1.user.last_name);
@@ -349,8 +348,8 @@ test.describe('User Management API Tests', () => {
     const updateResponse = await apiClient.put('/updateAccount', updatedData);
     const updateBody: AccountResponse = await apiClient.parseJsonResponse(updateResponse);
     
-    expect(updateResponse.status()).toBe(expectedResponseCodes.OK);
-    expect(updateBody.message).toBe(expectedResponseMessages.USER_UPDATED);
+    expect(updateResponse.status()).toBe(HTTP_STATUS.OK);
+    expect(updateBody.message).toBe(API_MESSAGES.USER_UPDATED);
     console.log('✓ User updated');
 
     // 4. Get user details again (verify update)
@@ -361,7 +360,7 @@ test.describe('User Management API Tests', () => {
     });
     const getBody2: UserDetailResponse = await apiClient.parseJsonResponse(getResponse2);
     
-    expect(getResponse2.status()).toBe(expectedResponseCodes.OK);
+    expect(getResponse2.status()).toBe(HTTP_STATUS.OK);
     expect(getBody2.user.first_name).toBe(updatedData.firstname);
     expect(getBody2.user.last_name).toBe(updatedData.lastname);
     console.log('✓ Update verified:', getBody2.user.first_name, getBody2.user.last_name);
@@ -375,8 +374,8 @@ test.describe('User Management API Tests', () => {
     });
     const deleteBody: AccountResponse = await apiClient.parseJsonResponse(deleteResponse);
     
-    expect(deleteResponse.status()).toBe(expectedResponseCodes.OK);
-    expect(deleteBody.message).toBe(expectedResponseMessages.ACCOUNT_DELETED);
+    expect(deleteResponse.status()).toBe(HTTP_STATUS.OK);
+    expect(deleteBody.message).toBe(API_MESSAGES.ACCOUNT_DELETED);
     console.log('✓ User deleted');
 
     console.log('\n=== E2E Test Completed Successfully ===\n');

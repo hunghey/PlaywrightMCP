@@ -11,9 +11,8 @@
 import { test, expect } from '@playwright/test';
 import { ApiClient } from '../../utils/apiClient';
 import { LoginResponse, ResponseCode } from '../../utils/apiTypes';
+import { HTTP_STATUS, API_MESSAGES } from '../../test-data/shared/contants';
 import { 
-  expectedResponseCodes, 
-  expectedResponseMessages,
   validLoginCredentials,
   invalidLoginCredentials,
   missingParameterData 
@@ -47,15 +46,15 @@ test.describe('Authentication API Tests', () => {
 
     // The API might return 200 or 404 depending on whether test user exists
     // For demonstration, we'll use soft assertions
-    if (statusCode === expectedResponseCodes.OK) {
+    if (statusCode === HTTP_STATUS.OK) {
       // If user exists, validate success response
       apiClient.validateResponseCode(responseBody, ResponseCode.OK);
-      apiClient.validateResponseMessage(responseBody, expectedResponseMessages.USER_EXISTS);
-    } else if (statusCode === expectedResponseCodes.NOT_FOUND) {
+      apiClient.validateResponseMessage(responseBody, API_MESSAGES.USER_EXISTS);
+    } else if (statusCode === HTTP_STATUS.NOT_FOUND) {
       // If user doesn't exist, that's expected for test data
       console.log('Test user does not exist in database - this is expected for demo purposes');
       apiClient.validateResponseCode(responseBody, ResponseCode.NOT_FOUND);
-      apiClient.validateResponseMessage(responseBody, expectedResponseMessages.USER_NOT_FOUND);
+      apiClient.validateResponseMessage(responseBody, API_MESSAGES.USER_NOT_FOUND);
     }
   });
 
@@ -96,7 +95,7 @@ test.describe('Authentication API Tests', () => {
     // Validate error message
     apiClient.validateResponseMessage(
       responseBody,
-      expectedResponseMessages.BAD_REQUEST_LOGIN
+      API_MESSAGES.BAD_REQUEST_LOGIN
     );
   });
 
@@ -116,7 +115,7 @@ test.describe('Authentication API Tests', () => {
     apiClient.validateResponseCode(responseBody, ResponseCode.BAD_REQUEST);
     apiClient.validateResponseMessage(
       responseBody,
-      expectedResponseMessages.BAD_REQUEST_LOGIN
+      API_MESSAGES.BAD_REQUEST_LOGIN
     );
   });
 
@@ -131,7 +130,7 @@ test.describe('Authentication API Tests', () => {
     const responseBody: LoginResponse = await apiClient.parseJsonResponse(response);
     apiClient.validateResponseMessage(
       responseBody,
-      expectedResponseMessages.BAD_REQUEST_LOGIN
+      API_MESSAGES.BAD_REQUEST_LOGIN
     );
   });
 
@@ -153,7 +152,7 @@ test.describe('Authentication API Tests', () => {
     // Validate error message
     apiClient.validateResponseMessage(
       responseBody,
-      expectedResponseMessages.METHOD_NOT_SUPPORTED
+      API_MESSAGES.METHOD_NOT_SUPPORTED
     );
   });
 
@@ -175,7 +174,7 @@ test.describe('Authentication API Tests', () => {
     // Validate error message
     apiClient.validateResponseMessage(
       responseBody,
-      expectedResponseMessages.USER_NOT_FOUND
+      API_MESSAGES.USER_NOT_FOUND
     );
   });
 
@@ -200,8 +199,8 @@ test.describe('Authentication API Tests', () => {
       // Should return either 404 (user not found) or 400 (bad request)
       const statusCode = responseBody.responseCode;
       expect.soft([
-        expectedResponseCodes.NOT_FOUND,
-        expectedResponseCodes.BAD_REQUEST
+        HTTP_STATUS.NOT_FOUND,
+        HTTP_STATUS.BAD_REQUEST
       ]).toContain(statusCode);
     });
   });
@@ -220,7 +219,7 @@ test.describe('Authentication API Tests', () => {
     const responseBody: LoginResponse = await apiClient.parseJsonResponse(response);
 
     // Should not return success (200)
-    expect(responseBody.responseCode).not.toBe(expectedResponseCodes.OK);
+    expect(responseBody.responseCode).not.toBe(HTTP_STATUS.OK);
 
     console.log('SQL injection test response:', responseBody);
   });

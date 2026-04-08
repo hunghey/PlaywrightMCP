@@ -1,6 +1,6 @@
 import { ERROR_MESSAGES, TEST_DATA } from "../../config/constants";
 import { saveUserToCSV } from "../../utils/csvUtils";
-import { test } from "../fixtures/pomFixtures";
+import { test } from "../../fixtures/pomFixtures";
 import { buildUserData } from "../../utils/testDataGenerator";
 import { UIUserData } from "../../utils/uiTypes";
 

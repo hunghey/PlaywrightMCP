@@ -1,6 +1,6 @@
 import path from "path";
 import { faker } from "@faker-js/faker";
-import { test } from "../fixtures/pomFixtures";
+import { test } from "../../fixtures/pomFixtures";
 
 /**
  * Functional Test: Contact Us Form
