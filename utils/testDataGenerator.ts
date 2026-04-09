@@ -1,5 +1,5 @@
 import { faker } from "@faker-js/faker";
-import { generatePassword } from "../fixtures/testData";
+import { generatePassword } from "../test-data/api/users.generator";
 import { UIUserData } from "./uiTypes";
   // =============================================================================
 // User Account Types

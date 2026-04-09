@@ -21,7 +21,7 @@ test.describe('Brand API Tests', () => {
 
   /**
    * API 3: GET All Brands List
-   * Positive Scenario: Retrieve all brands successfully
+   * Positive Scenario: Retrieve all brands successfullyTC-CU-001: Should submit contact form successfully with file upload
    * Expected: 200 status code, valid brands array with brand details
    */
   test('API 3 - GET All Brands List - Should return all brands successfully', async () => {

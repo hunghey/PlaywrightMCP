@@ -1,5 +1,5 @@
 import { faker } from "@faker-js/faker";
-import { test } from "../fixtures/pomFixtures";
+import { test } from "../../../../fixtures/pomFixtures";
 
 /**
  * Negative Test Cases: Contact Us Form Validation

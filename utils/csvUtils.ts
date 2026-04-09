@@ -19,7 +19,7 @@ export async function saveUserToCSV(
   name: string,
   email: string,
   password: string,
-  filePath: string = "data/created_users.csv"
+  filePath: string = "test-data/created_users.csv"
 ): Promise<void> {
   try {
     const absolutePath = path.resolve(filePath);

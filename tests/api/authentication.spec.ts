@@ -15,8 +15,8 @@ import { HTTP_STATUS, API_MESSAGES } from '../../test-data/shared/contants';
 import { 
   validLoginCredentials,
   invalidLoginCredentials,
-  missingParameterData 
-} from '../../fixtures/testData';
+  missingAuthParameters 
+} from '../../test-data/api/authentication.data';
 
 test.describe('Authentication API Tests', () => {
   let apiClient: ApiClient;
@@ -84,7 +84,7 @@ test.describe('Authentication API Tests', () => {
    */
   test('API 8 - POST Verify Login without email - Should return 400 Bad Request', async () => {
     // Make POST request without email (only password)
-    const response = await apiClient.post('/verifyLogin', missingParameterData.loginWithoutEmail);
+    const response = await apiClient.post('/verifyLogin', missingAuthParameters.loginWithoutEmail);
 
     // Parse response body
     const responseBody: LoginResponse = await apiClient.parseJsonResponse(response);
@@ -106,7 +106,7 @@ test.describe('Authentication API Tests', () => {
    */
   test('API 8 - POST Verify Login without password - Should return 400 Bad Request', async () => {
     // Make POST request without password (only email)
-    const response = await apiClient.post('/verifyLogin', missingParameterData.loginWithoutPassword);
+    const response = await apiClient.post('/verifyLogin', missingAuthParameters.loginWithoutPassword);
 
     // Parse response body
     const responseBody: LoginResponse = await apiClient.parseJsonResponse(response);

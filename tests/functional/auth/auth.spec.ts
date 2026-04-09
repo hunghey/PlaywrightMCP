@@ -1,8 +1,8 @@
-import { ERROR_MESSAGES, TEST_DATA } from "../../config/constants";
-import { saveUserToCSV } from "../../utils/csvUtils";
-import { test } from "../../fixtures/pomFixtures";
-import { buildUserData } from "../../utils/testDataGenerator";
-import { UIUserData } from "../../utils/uiTypes";
+import { ERROR_MESSAGES, TEST_DATA } from "../../../config/constants";
+import { saveUserToCSV } from "../../../utils/csvUtils";
+import { test } from "../../../fixtures/pomFixtures";
+import { buildUserData } from "../../../utils/testDataGenerator";
+import { UIUserData } from "../../../utils/uiTypes";
 
 test.describe("User Authentication & Management Tests", () => {
   /**
@@ -11,10 +11,10 @@ test.describe("User Authentication & Management Tests", () => {
   async function registerUser(
     user: UIUserData,
     pages: {
-      homePage: import("../../pages/HomePage").HomePage;
-      signupPage: import("../../pages/SignupPage").SignupPage;
-      accountInfoPage: import("../../pages/AccountInfoPage").AccountInfoPage;
-      accountCreatedPage: import("../../pages/AccountCreatedPage").AccountCreatedPage;
+      homePage: import("../../../pages/HomePage").HomePage;
+      signupPage: import("../../../pages/SignupPage").SignupPage;
+      accountInfoPage: import("../../../pages/AccountInfoPage").AccountInfoPage;
+      accountCreatedPage: import("../../../pages/AccountCreatedPage").AccountCreatedPage;
     }
   ): Promise<void> {
     const { homePage, signupPage, accountInfoPage, accountCreatedPage } = pages;
@@ -39,10 +39,10 @@ test.describe("User Authentication & Management Tests", () => {
   async function cleanupUser(
     user: UIUserData,
     pages: {
-      signupPage: import("../../pages/SignupPage").SignupPage;
-      dashboardPage: import("../../pages/DashboardPage").DashboardPage;
-      deleteAccountPage: import("../../pages/DeleteAccountPage").DeleteAccountPage;
-      homePage: import("../../pages/HomePage").HomePage;
+      signupPage: import("../../../pages/SignupPage").SignupPage;
+      dashboardPage: import("../../../pages/DashboardPage").DashboardPage;
+      deleteAccountPage: import("../../../pages/DeleteAccountPage").DeleteAccountPage;
+      homePage: import("../../../pages/HomePage").HomePage;
     }
   ): Promise<void> {
     const { signupPage, dashboardPage, deleteAccountPage, homePage } = pages;
@@ -110,6 +110,7 @@ test.describe("User Authentication & Management Tests", () => {
         accountCreatedPage,
       });
       await dashboardPage.verifyLoggedInAs(user.name);
+      await saveUserToCSV(user.name, user.email, user.password);
       await dashboardPage.logout();
       await signupPage.verifyNewUserSignupVisible();
     });
@@ -148,6 +149,7 @@ test.describe("User Authentication & Management Tests", () => {
         accountCreatedPage,
       });
       await dashboardPage.verifyLoggedInAs(user.name);
+      await saveUserToCSV(user.name, user.email, user.password);
       await dashboardPage.logout();
       await signupPage.verifyNewUserSignupVisible();
     });

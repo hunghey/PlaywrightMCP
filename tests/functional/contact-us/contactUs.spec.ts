@@ -1,6 +1,6 @@
 import path from "path";
 import { faker } from "@faker-js/faker";
-import { test } from "../../fixtures/pomFixtures";
+import { test } from "../../../fixtures/pomFixtures";
 
 /**
  * Functional Test: Contact Us Form
@@ -29,7 +29,7 @@ test.describe("Contact Us Form - Functional Tests", () => {
       subject: faker.lorem.sentence(5),
       message: faker.lorem.paragraph(2),
     };
-    const uploadFilePath = path.resolve("data/test-upload.txt");
+    const uploadFilePath = path.resolve("test-data/static/test-upload.txt");
 
     await test.step("Step 1: Navigate to home page", async () => {
       await homePage.navigateToHome();
