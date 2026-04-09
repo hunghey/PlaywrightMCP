@@ -2,67 +2,58 @@
 
 ![Playwright](https://img.shields.io/badge/Playwright-v1.56+-2EAD33?style=flat-square&logo=playwright&logoColor=white)
 ![TypeScript](https://img.shields.io/badge/TypeScript-v5.0+-3178C6?style=flat-square&logo=typescript&logoColor=white)
-![Node.js](https://img.shields.io/badge/Node.js-v18.0+-339933?style=flat-square&logo=node.js&logoColor=white)
+![Node.js](https://img.shields.io/badge/Node.js-v20.0+-339933?style=flat-square&logo=node.js&logoColor=white)
 
 ## Introduction
 
-This repository contains a professional **End-to-End (E2E) Automation Framework** built with **Playwright** and **TypeScript**.
+This repository contains a professional **Hybrid Automation Framework** (API & UI) built with **Playwright** and **TypeScript**. 
 
-The framework implements industry best practices including the **Page Object Model (POM)** pattern, data-driven testing with CSV integration, and a modular architecture that promotes code reusability and maintainability.
+The framework is designed for scalability and reliability, implementing **Page Object Model (POM)**, **Custom Fixtures**, and **Data-Driven Testing**. It supports distinct testing layers: API, Functional (UI), and End-to-End (E2E) flows.
 
 ## Key Features
 
-- **Page Object Model (POM) with Playwright fixtures**
-
-- **CSV Data Provider**
-
-- **Environment Configuration**
-
-- **CI-ready Playwright configuration (retries, junit/html reporters, traces/videos on failure)**
-
-- **Test Data Generation**
+- **Hybrid Testing**: Unified framework for API and UI automation.
+- **Page Object Model (POM)**: Enhanced with Playwright fixtures for cleaner test code.
+- **Data-Driven Testing**: Integration with CSV and TypeScript-based data generators.
+- **Multi-layered CI/CD**: Optimized GitHub Actions pipeline with parallel execution.
+- **Automatic Reporting**: HTML and JUnit reports with trace and video on failure.
 
 ## Project Structure
 
 ```
 PlaywrightMCp/
-├── config/                      # Environment and configuration files
-│   └── environment.ts           # Site configuration and environment settings
-├── data/                        # CSV data files for data-driven testing
-│   └── created_users.csv        # User credentials storage
-├── pages/                       # Page Object Model classes
-│   ├── components/              # Reusable UI components
-│   │   └── NavbarComponent.ts   # Navigation bar component
-│   ├── basePage.ts              # Base class for all page objects
-│   ├── HomePage.ts              # Home page object
-│   ├── SignupPage.ts            # Sign-up page object
-│   ├── AccountInfoPage.ts       # Account information page object
-│   ├── AccountCreatedPage.ts    # Account creation confirmation page
-│   ├── DashboardPage.ts         # User dashboard page object
-│   └── DeleteAccountPage.ts     # Account deletion page object
-├── tests/                       # Test specifications
-│   └── auth/                    # Authentication capability tests
-│       └── auth.spec.ts         # User authentication and management test suite
-├── utils/                       # Utility helper functions
-│   ├── csvUtils.ts              # CSV read/write operations for test data
-│   └── testDataGenerator.ts     # Test data generation utilities
-├── .env                         # Environment variables (not committed)
-├── .gitignore                   # Git ignore rules
-├── package.json                 # Project dependencies and scripts
-├── playwright.config.ts         # Main Playwright configuration
-└── README.md                    # Project documentation
+├── .github/workflows/       # CI/CD Workflows (playwright.yml)
+├── config/                  # Framework & Environment configuration
+├── fixtures/                # Playwright Custom Fixtures (POM initialization)
+├── pages/                   # Page Object Model (POM)
+│   ├── components/          # Reusable UI components (Navbar, etc.)
+│   └── ...                  # Individual Page Objects
+├── test-data/               # Test data management
+│   ├── api/                 # API-specific test data
+│   ├── ui/                  # UI-specific test data
+│   ├── shared/              # Shared constants and data
+│   ├── static/              # Static files for testing (e.g., uploads)
+│   └── created_users.csv    # Dynamic data storage
+├── tests/                   # Test Suites
+│   ├── api/                 # API Contract & Functional tests
+│   ├── e2e/                 # Full User flows
+│   └── functional/          # Feature-level UI tests (Auth, Cart, Products)
+├── utils/                   # Core utilities
+│   ├── apiClient.ts         # REST API client wrapper
+│   ├── csvUtils.ts          # CSV processing logic
+│   └── testDataGenerator.ts # Faker-based data generation
+├── playwright.config.ts     # Main Playwright configuration
+└── package.json             # Project dependencies and metadata
 ```
 
 ## Prerequisites & Installation
 
 ### Prerequisites
 
-Ensure you have the following installed on your machine:
+- **Node.js**: v20.0 or higher (Recommended)
+- **npm**: v9.0 or higher
 
-- **Node.js**: v18.0 or higher ([Download](https://nodejs.org/))
-- **npm**: v9.0 or higher (comes with Node.js)
-
-### Installation Steps
+### Setup Instructions
 
 1. **Clone the repository:**
    ```bash
@@ -70,47 +61,65 @@ Ensure you have the following installed on your machine:
    cd PlaywrightMCp
    ```
 
-2. **Install project dependencies:**
+2. **Install dependencies:**
    ```bash
    npm install
    ```
 
-3. **Install Playwright browsers:**
+3. **Install Playwright Browsers:**
    ```bash
-   npx playwright install
+   npx playwright install chromium --with-deps
    ```
 
-4. **Configure environment variables (if required):**
-   - Create a `.env` file in the root directory
-   - Add any required environment variables (see `config/environment.ts` for reference)
-
-### Verify Installation
-
-Run a quick test to verify everything is set up correctly:
-
-```bash
-npx playwright test --list
-```
-
-This command will list all available tests without executing them, confirming that Playwright is properly configured.
+4. **Environment Configuration:**
+   Create a `.env` file in the root directory or export the `BASE_URL`:
+   ```bash
+   BASE_URL=https://automationexercise.com
+   ```
 
 ## Running Tests
 
-For detailed information on running tests, see [INSTRUCTIONS.md](./INSTRUCTIONS.md).
+### 🔌 API Tests
+Fast, lightweight tests for endpoint verification and contracts.
+```bash
+npx playwright test tests/api/
+```
 
-Quick reference:
-- Run all tests: `npx playwright test`
-- Run in UI mode: `npx playwright test --ui`
-- Run in debug mode: `npx playwright test --debug`
-- View test report: `npx playwright show-report`
+### 🧪 Functional Tests
+UI-based tests focused on specific features (Auth, Cart, etc.).
+```bash
+npx playwright test tests/functional/
+```
+
+### 🚀 E2E Tests
+Full purchase flows and long user journeys.
+```bash
+npx playwright test tests/e2e/
+```
+
+### Miscellaneous Commands
+- **Run all tests**: `npx playwright test`
+- **Interactive UI Mode**: `npx playwright test --ui`
+- **Debug Mode**: `npx playwright test --debug`
+- **View Report**: `npx playwright show-report`
+
+## CI/CD Pipeline
+
+The framework uses GitHub Actions (`.github/workflows/playwright.yml`) with the following logic:
+- **Push/Pull Request**: Triggers the full suite on `main`.
+- **Scheduled**: Runs daily at 6 AM UTC.
+- **Jobs**:
+  1. **API Tests**: Independent and fast.
+  2. **Functional Tests**: UI validation.
+  3. **E2E Tests**: Depends on Functional tests completion.
 
 ## Technology Stack
 
-- **Playwright**: v1.56.0 - Modern browser automation framework
-- **TypeScript**: v5.0+ - Type-safe JavaScript
-- **Faker.js**: v10.2.0 - Test data generation
-- **csv-parse**: v6.1.0 - CSV file parsing
-- **dotenv**: v17.2.3 - Environment variable management
+- **Playwright**: v1.56.0
+- **TypeScript**: v5.0+
+- **Faker.js**: Data generation
+- **CSV-Parse**: Data-driven testing
+- **Dotenv**: Environment management
 
 ## Contributing
 
