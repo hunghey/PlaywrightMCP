@@ -1,27 +1,125 @@
 name: Playwright Tests
+
 on:
   push:
-    branches: [ main, master ]
+    branches: [master]
   pull_request:
-    branches: [ main, master ]
+    branches: [master]
+  schedule:
+    # Run daily at 6 AM UTC (1 PM Bangkok time)
+    - cron: '0 6 * * *'
+
 jobs:
-  test:
-    timeout-minutes: 60
+  # ─────────────────────────────────────────────────────────────
+  # API Tests - Fast, no browser needed
+  # ─────────────────────────────────────────────────────────────
+  api-tests:
+    name: 🔌 API Tests
+    timeout-minutes: 15
     runs-on: ubuntu-latest
+
     steps:
-    - uses: actions/checkout@v4
-    - uses: actions/setup-node@v4
-      with:
-        node-version: lts/*
-    - name: Install dependencies
-      run: npm ci
-    - name: Install Playwright Browsers
-      run: npx playwright install --with-deps
-    - name: Run Playwright tests
-      run: npx playwright test
-    - uses: actions/upload-artifact@v4
-      if: always()
-      with:
-        name: playwright-report
-        path: playwright-report/
-        retention-days: 30
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Playwright (Chromium only)
+        run: npx playwright install chromium --with-deps
+
+      - name: Run API tests
+        run: npx playwright test tests/api/
+        env:
+          BASE_URL: https://automationexercise.com
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: api-test-report
+          path: playwright-report/
+          retention-days: 30
+
+  # ─────────────────────────────────────────────────────────────
+  # Functional Tests - UI component tests
+  # ─────────────────────────────────────────────────────────────
+  functional-tests:
+    name: 🧪 Functional Tests
+    timeout-minutes: 30
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Playwright Browsers
+        run: npx playwright install chromium --with-deps
+
+      - name: Run Functional tests
+        run: npx playwright test tests/functional/
+        env:
+          BASE_URL: https://automationexercise.com
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: functional-test-report
+          path: playwright-report/
+          retention-days: 30
+
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: functional-test-results
+          path: test-results/
+          retention-days: 7
+
+  # ─────────────────────────────────────────────────────────────
+  # E2E Tests - Full purchase flow
+  # ─────────────────────────────────────────────────────────────
+  e2e-tests:
+    name: 🚀 E2E Tests
+    timeout-minutes: 30
+    runs-on: ubuntu-latest
+    needs: [functional-tests]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Playwright Browsers
+        run: npx playwright install chromium --with-deps
+
+      - name: Run E2E tests
+        run: npx playwright test tests/e2e/
+        env:
+          BASE_URL: https://automationexercise.com
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: e2e-test-report
+          path: playwright-report/
+          retention-days: 30
+
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: e2e-test-results
+          path: test-results/
+          retention-days: 7
